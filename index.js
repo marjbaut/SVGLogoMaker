@@ -1,7 +1,8 @@
 
 const inquirer = require("inquirer");
-// const fs = require('fs');
+const fs = require('fs');
 // const {Circle, Triangle, square} = require ('./lib/shapes')
+const {Shape, Circle, Square, Triangle} = require('./lib/shapes')
 
 // // class Svg{
 // //     constructor(){
@@ -25,28 +26,6 @@ const inquirer = require("inquirer");
 // // {/* <svg version="1.1" width="300" height="200" xmlns='http://www.w3.org/2000/svg'><rect x='90' y='40' width='120' height='120' fill="black"/><text x='150' y='125' fonst-size='60' text-anchor='middle' fill='orange'>text</text></svg> */}
 
 
-// // inquirer.prompt([
-// //     {type:'input',
-// //     name:'logoTxt',
-// //     message:'Enter up to three characters to display in yor logo: '
-// //     },
-// //     {type:'input',
-// //     name:'textColor',
-// //     message:'Enter text color keyword (OR a hexadecimal number): ' 
-// //     },
-// //     {type:'list',
-// //     name:'logoShape',
-// //     message:'Pick a shape for your logo: ',
-// //     choice: ['circle', 'triangle','square'] 
-// //     },
-// //     {type:'input',
-// //     name:'shapeColor',
-// //     message:'Enter shape color keyword (OR a hexadecimal number): '
-// //     },
-// //     ])
-// //     .then((answers)=>
-// //     console.log(answers));
-
 const questions = [
     {type:'input',
     name:'logoTxt',
@@ -56,34 +35,26 @@ const questions = [
     name:'textColor',
     message:'Enter text color keyword (OR a hexadecimal number): ' 
     },
-    {type:'list',
-    name:'logoShape',
-    message:'Pick a shape for your logo: ',
-    choice: ['circle', 'triangle','square'] 
-    },
     {type:'input',
     name:'shapeColor',
     message:'Enter shape color keyword (OR a hexadecimal number): '
     },
-];
-
-
-// function writeToFile(fileName, data){
-//     console.log("test")
-//     fileSystem.writeFile(fileName, data,function(err){
-//         if(err){
-//             return console.log(err);
-//         }else{ console.log("created a svg file");
-//     }});
-// }
-
+    {
+        type:'list',
+        name:'logoShape',
+        message:'Pick a shape for your logo: ',
+        choices:['circle', 'triangle','square'],
+        filter(val){
+            return val.toLowerCase();
+        }
+    },
+    ];
 
 function askQuestion(){
     return inquirer.prompt(questions)
-        .then( (answers)=>
-        { console.log('answers')
-            const a = ShapesInput.generateLogo(answers)
-            fs.writeFile('logo.svg',a, function(err){
+        .then( (answers)=>{
+            const shapeInput = Shape.generateLogo(answers)
+            fs.writeFile('logo.svg',shapeInput, function(err){
                 if (err){
                     console.log('could not save',err)
                 } else{
